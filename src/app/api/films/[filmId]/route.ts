@@ -1,7 +1,6 @@
 import axios from 'axios';
 import type { IFilm } from '../types';
-import { NextResponse } from 'next/server';
-import { NextApiRequest } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
 type Context = {
   params: {
@@ -9,7 +8,7 @@ type Context = {
   };
 };
 
-export async function GET(_: NextApiRequest, { params: { filmId } }: Context) {
+export async function GET(_: NextRequest, { params: { filmId } }: Context) {
   try {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/films/${filmId}`)
     const film: IFilm = res.data;

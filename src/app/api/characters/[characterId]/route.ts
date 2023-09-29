@@ -1,7 +1,6 @@
 import axios from 'axios';
 import type { ICharacter } from '../types';
-import { NextResponse } from 'next/server';
-import { NextApiRequest } from 'next';
+import { NextResponse, NextRequest } from 'next/server';
 
 type Context = {
   params: {
@@ -9,7 +8,7 @@ type Context = {
   };
 };
 
-export async function GET(_: NextApiRequest, { params: { characterId } }: Context) {
+export async function GET(_: NextRequest, { params: { characterId } }: Context) {
   try {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/characters/${characterId}`)
     const character: ICharacter = res.data;

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import type { IPlanet } from '../types';
-import { NextResponse } from 'next/server';
-import { NextApiRequest } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
 type Context = {
   params: {
@@ -9,7 +8,7 @@ type Context = {
   };
 };
 
-export async function GET(_: NextApiRequest, { params: { planetId } }: Context) {
+export async function GET(_: NextRequest, { params: { planetId } }: Context) {
   try {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/planets/${planetId}`)
     const planet: IPlanet = res.data;
