@@ -36,7 +36,7 @@ export const SwapiTable = ({ data, handleSelect, isLoading, columns, handlePrevP
                     {new Array(10).fill(0).map((_, index) => (
                         <tr
                             key={index}
-                            className="border-b border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 max-h-8"
+                            className="border-b border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800 max-h-8 cursor-pointer"
                             aria-disabled={isLoading}
                             onClick={() => !isLoading && handleSelect(data[index])}
                         >
