@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import useSWR from "swr";
-import type { IPlanet } from "@/app/api/planets/types";
+import type { IPlanet } from "@/services/planets/types";
 import { NavBar } from "@/components/commons/nav-bar";
 import { SwapiTable, SwapiTableColumn } from "@/components/commons/swapi-table";
 import { SwapiCard } from "@/components/commons/swapi-card";
-
-const fetcher = (input: RequestInfo | URL, init?: RequestInit | undefined) => fetch(input, init).then(res => res.json());
+import { getAllPlanets } from "@/services/planets";
+import { useQuery } from "react-query";
 
 const columns: [SwapiTableColumn, SwapiTableColumn, SwapiTableColumn] = [
     {
@@ -37,8 +36,8 @@ const selectedColumns = [
 
 const CharactersPage = () => {
     const [page, setPage] = useState<number>(1);
-    const { data, isLoading } = useSWR(`/api/planets?page=${page}`, fetcher);
-    const planets: IPlanet[] = data?.body?.planets || [];
+    const { data, isLoading } = useQuery(['getAllPlanets', page], () => getAllPlanets(page));
+    const planets: IPlanet[] = data || [];
     const [selectedPlanet, setSelectedPlanet] = useState<IPlanet | null>(null);
 
     const handleSelectPlanet = (planet: IPlanet) => {

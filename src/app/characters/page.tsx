@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import useSWR from "swr";
-import type { ICharacter } from "@/app/api/characters/types";
+import { useMemo, useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import type { ICharacter } from "@/services/characters/types";
 import { NavBar } from "@/components/commons/nav-bar";
 import { SwapiTable, SwapiTableColumn } from "@/components/commons/swapi-table";
 import { SwapiCard } from "@/components/commons/swapi-card";
-
-const fetcher = (input: RequestInfo | URL, init?: RequestInit | undefined) => fetch(input, init).then(res => res.json());
+import { useQuery } from "react-query";
+import { getAllCharacters } from "@/services/characters";
 
 const columns: [SwapiTableColumn, SwapiTableColumn, SwapiTableColumn] = [
     {
@@ -38,8 +37,8 @@ const selectedColumns = [
 
 const CharactersPage = () => {
     const [page, setPage] = useState<number>(1);
-    const { data, isLoading } = useSWR(`/api/characters?page=${page}`, fetcher);
-    const characters: ICharacter[] = data?.body?.characters || [];
+    const { data, isLoading } = useQuery(['getAllCharacters', page], () => getAllCharacters(page));
+    const characters = useMemo(() => data || [], [data]);
     const [selectedCharacter, setSelectedCharacter] = useState<ICharacter | null>(null);
 
     const handleSelectCharacter = (character: ICharacter) => {

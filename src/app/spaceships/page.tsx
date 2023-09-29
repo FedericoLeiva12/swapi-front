@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import useSWR from "swr";
-import type { ISpaceship } from "@/app/api/spaceships/types";
+import { AnimatePresence } from "framer-motion";
+import type { ISpaceship } from "@/services/spaceships/types";
 import { NavBar } from "@/components/commons/nav-bar";
 import { SwapiTable, SwapiTableColumn } from "@/components/commons/swapi-table";
 import { SwapiCard } from "@/components/commons/swapi-card";
-
-const fetcher = (input: RequestInfo | URL, init?: RequestInit | undefined) => fetch(input, init).then(res => res.json());
+import { useQuery } from "react-query";
+import { getAllSpaceships } from "@/services/spaceships";
 
 const columns: [SwapiTableColumn, SwapiTableColumn, SwapiTableColumn] = [
     {
@@ -43,8 +42,8 @@ const selectedColumns = [
 
 const SpaceshipsPage = () => {
     const [page, setPage] = useState<number>(1);
-    const { data, isLoading } = useSWR(`/api/spaceships?page=${page}`, fetcher);
-    const spaceships: ISpaceship[] = data?.body?.spaceships || [];
+    const { data, isLoading } = useQuery(['getAllSpaceships', page], () => getAllSpaceships(page));
+    const spaceships: ISpaceship[] = data || [];
     const [selectedSpaceship, setSelectedSpaceship] = useState<ISpaceship | null>(null);
 
     const handleSelectCharacter = (character: ISpaceship) => {

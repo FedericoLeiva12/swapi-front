@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import useSWR from "swr";
-import type { IFilm } from "@/app/api/films/types";
+import type { IFilm } from "@/services/films/types";
 import { NavBar } from "@/components/commons/nav-bar";
 import { SwapiTable, SwapiTableColumn } from "@/components/commons/swapi-table";
 import { SwapiCard } from "@/components/commons/swapi-card";
-
-const fetcher = (input: RequestInfo | URL, init?: RequestInit | undefined) => fetch(input, init).then(res => res.json());
+import { getAllFilms } from "@/services/films";
+import { useQuery } from "react-query";
 
 const columns: [SwapiTableColumn, SwapiTableColumn, SwapiTableColumn] = [
     {
@@ -35,8 +34,8 @@ const selectedColumns = [
 
 const CharactersPage = () => {
     const [page, setPage] = useState<number>(1);
-    const { data, isLoading } = useSWR(`/api/films?page=${page}`, fetcher);
-    const films: IFilm[] = data?.body?.films || [];
+    const { data, isLoading } = useQuery(['getAllCharacters', page], () => getAllFilms(page));
+    const films: IFilm[] = data || [];
     const [selectedFilm, setSelectedFilm] = useState<IFilm | null>(null);
 
     const handleSelectFilm = (film: IFilm) => {
